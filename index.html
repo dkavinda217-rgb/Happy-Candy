@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Sri Lanka Candy Selling Website - Happy Candy</title>
+    <meta name="description"
+        content="Welcome to Happy Candy! The best place for sweet treats, yummy lollipops, and delicious surprises for kids! International quality candies.">
+    <!-- Google Fonts for playful look -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Nunito:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- Firebase SDK (The Brain 🧠) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Hot Deals Banner -->
+    <div id="hot-deals-banner" class="hot-deals-banner" style="display:none;">
+        <div class="banner-content">
+            <span id="hot-deals-text">🔥 HOT DEAL: 50% OFF on all Chocolates! Limited Time Only! 🔥</span>
+            <button id="hot-deals-close" class="banner-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- 1. Animated Loading Splash Screen -->
+    <div id="site-loader" class="site-loader">
+        <div class="loader-content">
+            <div class="spinning-candy">🍭</div>
+            <h2 class="loader-text" id="loader-text">Loading Sweetness...</h2>
+            <div class="loader-progress" id="loader-progress">
+                <div class="progress-bar"></div>
+            </div>
+            <!-- Maintenance Mode Login (Hidden by default) -->
+            <div id="maintenance-login" style="display:none; margin-top:20px;">
+                <input type="password" id="maintenance-pass" placeholder="Super Admin Password"
+                    style="padding:10px; border-radius:5px; border:1px solid #ccc; width:200px;">
+                <button id="maintenance-unlock-btn"
+                    style="padding:10px 20px; background:#e17055; color:white; border:none; border-radius:5px; cursor:pointer;">Unlock</button>
+            </div>
+        </div>
+    </div>
+    <!-- Big Sale Splash Overlay -->
+    <div id="sale-splash" class="sale-splash">
+        <button class="splash-close" id="splash-close-btn">&times;</button>
+        <div class="sale-splash-content">
+            <h1 class="splash-title" id="splash-title" data-i18n="splash_title">BIG SELLING!</h1>
+            <div class="splash-price">
+                <span id="splash-item-name" data-i18n="splash_item">Munchee Tipitip Cheese 20g</span> <br>
+                <span data-i18n="splash_now">Now Only</span>
+                <span class="price-bubble" id="splash-item-price" data-i18n="splash_price">Rs. 50</span>
+            </div>
+            <p class="splash-note" id="splash-item-note" data-i18n="splash_note">Grab your favorite snack before it's
+                gone! 🧀🍭</p>
+            <button class="splash-btn" data-i18n="splash_btn">Get it Now!</button>
+        </div>
+    </div>
+
+    <!-- Floating Background Elements -->
+    <div class="candy-bg">
+        <!-- Colorful Blobs -->
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+
+        <!-- Candy Icons -->
+        <div class="candy c1"><i class="fas fa-candy-cane"></i></div>
+        <div class="candy c2"><i class="fas fa-cookie"></i></div>
+        <div class="candy c3"><i class="fas fa-ice-cream"></i></div>
+        <div class="candy c4"><i class="fas fa-cookie-bite"></i></div>
+        <div class="candy c5"><i class="fas fa-lollipop"></i></div>
+
+        <!-- SVG Kid Characters (Vector Art) -->
+        <div class="kid kid1">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="45" r="30" fill="#FFE0BD" />
+                <circle cx="40" cy="40" r="3" fill="#333" />
+                <circle cx="60" cy="40" r="3" fill="#333" />
+                <path d="M 40 55 Q 50 65 60 55" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" />
+                <path d="M 20 45 Q 50 10 80 45" fill="#654321" />
+                <rect x="35" cy="75" width="30" height="40" rx="10" fill="#7bed9f" />
+            </svg>
+        </div>
+        <div class="kid kid2">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="45" r="30" fill="#FFDBAC" />
+                <circle cx="40" cy="40" r="3" fill="#333" />
+                <circle cx="60" cy="40" r="3" fill="#333" />
+                <path d="M 40 55 Q 50 65 60 55" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" />
+                <path d="M 20 45 Q 20 20 50 20 Q 80 20 80 45" fill="#f9ca24" />
+                <rect x="35" cy="75" width="30" height="40" rx="10" fill="#ff6b81" />
+            </svg>
+        </div>
+
+        <!-- Decorative Vector Shapes -->
+        <div class="shape s1"><i class="fas fa-cloud"></i></div>
+        <div class="shape s2"><i class="fas fa-star"></i></div>
+        <div class="shape s3"><i class="fas fa-certificate"></i></div>
+    </div>
+
+    <!-- Promo Badge -->
+    <!-- Promo Badge -->
+    <div id="promo-badge" class="promo-badge-fixed" style="display:none;">
+        <div class="promo-content">
+            <span id="promo-line-1" class="promo-top">BUY 1</span>
+            <span id="promo-line-2" class="promo-mid">GET 1</span>
+            <span id="promo-line-3" class="promo-bottom">FREE!</span>
+            <div class="promo-icon"><i class="fas fa-gift"></i></div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div class="chat-widget">
+        <div id="chat-popup" class="chat-popup">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chat-user-info">
+                    <h4>Candy AI Bot</h4>
+                    <span class="online-status">Always Online 🟢</span>
+                </div>
+                <button id="close-chat-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="chat-body" class="chat-body">
+                <div class="chat-msg bot">
+                    Hi! I am your Happy Candy AI. Ask me about our treats, prices, or delivery! 🍭
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a message...">
+                <button id="send-chat-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button id="chat-toggle-btn" class="chat-toggle-btn">
+            <i class="fas fa-robot"></i>
+            <span class="chat-text">AI Candy Bot</span>
+        </button>
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo playful-text">
+                <i class="fas fa-candy-cane"></i>
+                <span style="--i:1">H</span><span style="--i:2">a</span><span style="--i:3">p</span><span
+                    style="--i:4">p</span><span style="--i:5">y</span>
+                <span class="space">&nbsp;</span>
+                <span style="--i:6">C</span><span style="--i:7">a</span><span style="--i:8">n</span><span
+                    style="--i:9">d</span><span style="--i:10">y</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" data-i18n="nav_home">Home</a></li>
+                <li><a href="#about" data-i18n="nav_about">About</a></li>
+                <li><a href="#gallery" data-i18n="nav_gallery">Gallery</a></li>
+                <li><a href="#contact" class="btn-primary" data-i18n="nav_contact">Contact Us</a></li>
+            </ul>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div class="search-box-container">
+                    <input type="text" id="site-search" placeholder="Search sweets...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <button id="category-toggle-btn" class="category-nav-btn" title="Browse Categories">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button id="wishlist-toggle" class="wishlist-nav-btn">
+                    <i class="fas fa-heart"></i>
+                    <span id="wishlist-count" class="wishlist-count">0</span>
+                </button>
+                <button id="auth-nav-btn" class="auth-btn">
+                    <i class="fas fa-user-circle"></i> <span id="auth-status-text">Login</span>
+                </button>
+                <button id="cart-toggle" class="cart-nav-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </button>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="si">සිං</button>
+                    <button class="lang-btn" data-lang="ta">தமி</button>
+                    <button class="lang-btn" data-lang="jp">JP</button>
+                </div>
+                <!-- Theme Switcher -->
+                <div class="theme-switcher">
+                    <div class="theme-dot pink active" data-theme="pink" title="Strawberry Pink"></div>
+                    <div class="theme-dot blue" data-theme="blue" title="Blueberry Blue"></div>
+                    <div class="theme-dot brown" data-theme="brown" title="Chocolate Brown"></div>
+                    <div class="theme-dot purple" data-theme="purple" title="Grape Purple"></div>
+                </div>
+                <button id="auth-nav-btn" class="auth-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+                <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" class="dark-mode-btn" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Quick Category Sidebar -->
+    <div id="category-sidebar" class="category-sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-border-all"></i> Categories</h3>
+            <button id="close-cat-sidebar" class="close-sidebar">&times;</button>
+        </div>
+        <div id="quick-category-list" class="sidebar-list">
+            <!-- Dynamic Categories -->
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-modal-content">
+            <button id="close-auth" class="close-auth"><i class="fas fa-times"></i></button>
+            <div id="auth-form-container">
+                <div class="auth-tabs">
+                    <button id="login-tab" class="auth-tab active">Login</button>
+                    <button id="signup-tab" class="auth-tab">Sign Up</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <h3>Welcome Back! 🍭</h3>
+                    <div class="form-group">
+                        <input type="email" id="login-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="login-pass" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%;">Login</button>
+                    <p style="text-align:center; margin-top:15px; font-size:0.85rem;">
+                        <a href="#" id="forgot-pass-link" style="color:var(--primary-color); font-weight:700;">Forgot
+                            Password?</a>
+                    </p>
+                </form>
+
+                <!-- Forgot Password Form -->
+                <div id="forgot-pass-section" class="auth-form">
+                    <h3>Reset Password 🔑</h3>
+
+                    <!-- Step 1: Enter Email -->
+                    <div id="reset-step-1">
+                        <p style="font-size:0.85rem; color:#666; margin-bottom:15px; text-align:center;">Enter your
+                            email to receive a reset code.</p>
+                        <div class="form-group">
+                            <input type="email" id="reset-email" placeholder="Your Email Address">
+                        </div>
+                        <button type="button" id="send-reset-code" class="btn-primary" style="width:100%;">Send
+                            Code</button>
+                    </div>
+
+                    <!-- Step 2: Enter Code -->
+                    <div id="reset-step-2" style="display:none;">
+                        <p style="font-size:0.85rem; color:#666; margin-bottom:15px; text-align:center;">Enter the
+                            6-digit code sent to your email.</p>
+                        <div class="form-group">
+                            <input type="text" id="reset-code-input" placeholder="Enter Code (e.g. 123456)">
+                        </div>
+                        <button type="button" id="verify-reset-code" class="btn-primary" style="width:100%;">Verify
+                            Code</button>
+                    </div>
+
+                    <!-- Step 3: New Password -->
+                    <div id="reset-step-3" style="display:none;">
+                        <p style="font-size:0.85rem; color:#666; margin-bottom:15px; text-align:center;">Enter your new
+                            secure password.</p>
+                        <div class="form-group">
+                            <input type="password" id="new-password" placeholder="New Password">
+                        </div>
+                        <button type="button" id="save-new-pass" class="btn-primary" style="width:100%;">Save
+                            Password</button>
+                    </div>
+
+                    <button type="button" class="back-to-login"
+                        style="background:none; border:none; color:#777; width:100%; margin-top:15px; cursor:pointer; font-size:0.8rem;">Back
+                        to Login</button>
+                </div>
+
+                <!-- Signup Form -->
+                <form id="signup-form" class="auth-form">
+                    <h3>Create Account 🍬</h3>
+                    <div class="form-group">
+                        <input type="text" id="signup-name" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="signup-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="signup-pass" placeholder="Create Password" required>
+                    </div>
+                    <!-- Staff Registration (Optional) -->
+                    <div class="form-group">
+                        <input type="password" id="signup-staff-code" placeholder="Staff Code (Only for Employees)">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-photo-file"
+                            style="font-size:0.8rem; color:#666; display:block; margin-bottom:5px;">Profile Photo (Staff
+                            Only)</label>
+                        <input type="file" id="signup-photo-file" accept="image/*" style="padding:5px;">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%;">Create Account</button>
+                </form>
+            </div>
+
+            <!-- Profile View (When Logged In) -->
+            <div id="profile-container" class="profile-container" style="display:none;">
+                <div class="profile-header">
+                    <div class="profile-avatar"><i class="fas fa-user-check"></i></div>
+                    <h2 id="profile-name">User Name</h2>
+                    <p id="profile-email">user@example.com</p>
+                </div>
+
+                <!-- Order History Section -->
+                <div class="order-history-section">
+                    <h3><i class="fas fa-history"></i> Your Purchase History</h3>
+                    <div id="order-history-list" class="order-history-list">
+                        <p class="no-orders-msg">No previous orders found. Start shopping! 🍭</p>
+                    </div>
+                </div>
+
+                <!-- Admin Actions (Only for Admin) -->
+                <div id="admin-actions" class="admin-actions"
+                    style="display:none; margin-top:20px; border-top:2px solid #eee; padding-top:20px;">
+                    <h3><i class="fas fa-user-shield"></i> Administrative Panel</h3>
+                    <button id="manage-products-btn" class="btn-primary" style="width:100%; margin-top:10px;">
+                        <i class="fas fa-plus-circle"></i> Add New Product
+                    </button>
+                </div>
+
+                <div class="profile-actions">
+                    <button id="logout-btn" class="btn-secondary" style="width:100%;"><i
+                            class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin: Managed Catalog Modal -->
+    <div id="admin-modal" class="product-modal">
+        <div class="product-modal-content" style="max-width: 800px;">
+            <button id="close-admin-modal" class="close-modal">&times;</button>
+            <div class="admin-modal-body">
+                <h2 style="margin-bottom:20px; color:var(--primary-color);"><i class="fas fa-toolbox"></i> Shop
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h2 data-i18n="admin_title" style="margin-bottom:0;">Admin Panel</h2>
+                        <button id="export-data-btn" class="btn-primary"
+                            style="padding:5px 15px; font-size:0.8rem; background:#6c5ce7;">
+                            <i class="fas fa-share-alt"></i> Share Data
+                        </button>
+                    </div>
+                    <h2 style="font-size:1rem; margin-bottom:20px; color:#666; font-weight:normal;">Product & content
+                        Management</h2>
+
+                    <div class="admin-tabs"
+                        style="display:flex; gap:10px; margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:10px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;">
+                        <button class="admin-tab active" data-tab="add-p-tab" style="flex-shrink:0;">➕ Add
+                            Product</button>
+                        <button class="admin-tab" data-tab="manage-cat-tab" style="flex-shrink:0;">📂
+                            Categories</button>
+                        <button class="admin-tab" data-tab="all-p-tab" style="flex-shrink:0;">🛍️ All Products</button>
+                        <button class="admin-tab" data-tab="big-sale-tab"
+                            style="background:var(--secondary-color); color:#fff; flex-shrink:0;">🔥 Big Sale</button>
+                        <button class="admin-tab" data-tab="promo-tab"
+                            style="background:#ff6b6b; color:#fff; flex-shrink:0;">🎁 Special Offer</button>
+                        <button class="admin-tab" data-tab="payment-tab"
+                            style="background:#4834d4; color:#fff; flex-shrink:0;">💳 Payment</button>
+                        <button class="admin-tab" data-tab="about-tab"
+                            style="background:#00cec9; color:#fff; flex-shrink:0;">ℹ️ About</button>
+                        <button class="admin-tab" data-tab="security-tab"
+                            style="background:#2d3436; color:#fff; flex-shrink:0;">🔐 Security</button>
+                        <button class="admin-tab" data-tab="manage-orders-tab"
+                            style="background:#6c5ce7; color:#fff; flex-shrink:0;">📦 Orders</button>
+                        <button class="admin-tab" data-tab="manage-reviews-tab"
+                            style="background:#f1c40f; color:#fff; flex-shrink:0;">⭐ Reviews</button>
+                    </div>
+
+                    <!-- Tab 1: Add Product -->
+                    <div id="add-p-tab" class="admin-tab-content active">
+                        <form id="add-product-form">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="admin-p-cat" required
+                                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+                                        <!-- Dynamic Options -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Price (LKR)</label>
+                                    <input type="text" id="admin-p-price" placeholder="e.g. Rs. 500" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top:15px;">
+                                <label>Product Name (English/Sinhala/Tamil)</label>
+                                <input type="text" id="admin-p-name" placeholder="Enter full name" required>
+                            </div>
+
+                            <div class="form-group" style="margin-top:15px;">
+                                <label>Description (English/Sinhala/Tamil)</label>
+                                <textarea id="admin-p-desc" placeholder="Brief description..."
+                                    style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></textarea>
+                            </div>
+
+                            <div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:15px;">
+                                <h4 style="margin-bottom:10px;"><i class="fas fa-language"></i> Japanese Details
+                                    (Optional)
+                                </h4>
+                                <div class="form-group">
+                                    <label>Name (Japanese)</label>
+                                    <input type="text" id="admin-p-name-jp" placeholder="e.g. 抹茶ケーキ">
+                                </div>
+                                <div class="form-group" style="margin-top:10px;">
+                                    <label>Description (Japanese)</label>
+                                    <textarea id="admin-p-desc-jp" placeholder="Japanese description..."
+                                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top:15px;">
+                                <label>Product Image (Upload new or keep existing)</label>
+                                <input type="file" id="admin-p-img-file" accept="image/*"
+                                    style="margin-bottom:5px; padding:5px;">
+                                <input type="hidden" id="admin-p-img"> <!-- Stores value for JS logic -->
+                            </div>
+
+                            <button type="submit" class="btn-primary"
+                                style="width:100%; margin-top:25px; padding:15px;">
+                                Save Product <i class="fas fa-save"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 2: Manage Categories -->
+                    <div id="manage-cat-tab" class="admin-tab-content" style="display:none;">
+                        <div class="add-cat-form" style="display:flex; gap:10px; margin-bottom:20px;">
+                            <input type="text" id="new-cat-id" placeholder="Cat ID (e.g. fruit)" style="flex:1;">
+                            <input type="text" id="new-cat-name" placeholder="Name (e.g. Fruit)" style="flex:1;">
+                            <button id="btn-add-category" class="btn-primary" style="padding:10px 20px;">Add</button>
+                        </div>
+                        <div id="admin-category-list" class="admin-list">
+                            <!-- List of categories with delete buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: All Products List -->
+                    <div id="all-p-tab" class="admin-tab-content" style="display:none;">
+                        <div id="admin-product-list" class="admin-list">
+                            <!-- List of products with delete buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Manage Big Sale -->
+                    <div id="big-sale-tab" class="admin-tab-content" style="display:none;">
+                        <form id="big-sale-form">
+                            <div class="form-group"
+                                style="display:flex; align-items:center; gap:10px; margin-bottom:15px; padding:10px; background:#e8ffe8; border-radius:10px;">
+                                <input type="checkbox" id="bs-active" style="width:20px; height:20px;">
+                                <label for="bs-active" style="font-weight:bold; cursor:pointer;">Activate Big Sale
+                                    Splash
+                                    Screen</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Splash Title</label>
+                                <input type="text" id="bs-title" placeholder="e.g. BIG SELLING!" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Product Name</label>
+                                <input type="text" id="bs-name" placeholder="e.g. Munchee Tipitip" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Price (LKR)</label>
+                                <input type="text" id="bs-price" placeholder="e.g. Rs. 50" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Short Note/Description</label>
+                                <input type="text" id="bs-note" placeholder="e.g. Grab it before it's gone!">
+                            </div>
+
+                            <div class="form-group" style="margin-top:15px;">
+                                <label>Image URL (Optional)</label>
+                                <input type="text" id="bs-img" placeholder="https://example.com/image.jpg">
+                            </div>
+
+                            <button type="submit" class="btn-primary" style="width:100%; margin-top:20px;">
+                                Update Big Sale <i class="fas fa-fire"></i>
+                            </button>
+                        </form>
+
+                        <hr style="margin:25px 0; border:0; border-top:1px dashed #ccc;">
+
+                        <h4 style="margin-bottom:15px; color:#ff9f43;"><i class="fas fa-home"></i> Homepage Banner
+                            Settings</h4>
+                        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">Edit the big orange section on the
+                            homepage.</p>
+                        <form id="hero-banner-form">
+                            <div class="form-group"
+                                style="display:flex; align-items:center; gap:10px; margin-bottom:15px; padding:10px; background:#fffbf7; border-radius:10px; border:1px solid #ff9f43;">
+                                <input type="checkbox" id="hero-active" style="width:20px; height:20px;">
+                                <label for="hero-active" style="font-weight:bold; cursor:pointer;">Show Homepage
+                                    Banner</label>
+                            </div>
+                            <div class="form-group">
+                                <label>Banner Title (e.g. BIG SELLING!)</label>
+                                <input type="text" id="hero-title" placeholder="BIG SELLING! 🍭">
+                            </div>
+                            <div class="form-group">
+                                <label>Badge Text (e.g. HOT DEALS)</label>
+                                <input type="text" id="hero-badge" placeholder="HOT DEALS">
+                            </div>
+
+                            <div class="form-group"
+                                style="margin-top:15px; border-top:1px dashed #eee; padding-top:10px;">
+                                <label style="font-weight:bold; color:#e17055;">Feature Box 1</label>
+                                <input type="text" id="hero-f1-title" placeholder="Title (e.g. Combo Packs)"
+                                    style="margin-bottom:5px;">
+                                <input type="text" id="hero-f1-desc" placeholder="Subtitle (e.g. Up to 30% OFF!)">
+                            </div>
+
+                            <div class="form-group"
+                                style="margin-top:10px; border-top:1px dashed #eee; padding-top:10px;">
+                                <label style="font-weight:bold; color:#e17055;">Feature Box 2</label>
+                                <input type="text" id="hero-f2-title" placeholder="Title (e.g. Fast Delivery)"
+                                    style="margin-bottom:5px;">
+                                <input type="text" id="hero-f2-desc" placeholder="Subtitle (e.g. Free on all orders)">
+                            </div>
+
+                            <div class="form-group"
+                                style="margin-top:10px; border-top:1px dashed #eee; padding-top:10px;">
+                                <label style="font-weight:bold; color:#e17055;">Feature Box 3</label>
+                                <input type="text" id="hero-f3-title" placeholder="Title (e.g. Best Quality)"
+                                    style="margin-bottom:5px;">
+                                <input type="text" id="hero-f3-desc"
+                                    placeholder="Subtitle (e.g. International Standards)">
+                            </div>
+
+                            <div class="form-group"
+                                style="margin-top:15px; border-top:1px dashed #eee; padding-top:10px;">
+                                <label>Banner Background Colors (Gradient)</label>
+                                <div style="display:flex; gap:10px;">
+                                    <input type="color" id="hero-g1" value="#ff9f43" style="height:40px; flex:1;">
+                                    <input type="color" id="hero-g2" value="#ff6b6b" style="height:40px; flex:1;">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary"
+                                style="width:100%; margin-top:20px; background:#ff9f43;">
+                                Update Homepage Banner <i class="fas fa-edit"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 5: Sales/Inventory Stats -->
+                    <div id="stats-tab" class="admin-tab-content" style="display:none;">
+                        <!-- Stats content... -->
+                    </div>
+
+                    <!-- Tab 6: Manage Orders -->
+                    <div id="manage-orders-tab" class="admin-tab-content" style="display:none;">
+                        <h3 style="margin-bottom:15px; color:#6c5ce7;">Incoming Orders <i
+                                class="fas fa-truck-loading"></i></h3>
+                        <div id="admin-orders-list" class="admin-list" style="max-height:500px;">
+                            <!-- Dynamic orders -->
+                        </div>
+                        <!-- Orders will be rendered here -->
+                        <p style="text-align:center; color:#999;">No active orders yet.</p>
+                    </div>
+
+                    <!-- Tab 7: Manage Reviews -->
+                    <div id="manage-reviews-tab" class="admin-tab-content" style="display:none;">
+                        <div class="add-review-form"
+                            style="margin-bottom:20px; padding:15px; background:#fff9e6; border-radius:10px;">
+                            <h4 style="margin-bottom:10px; color:#f39c12;">Add Logic / Fake Review</h4>
+                            <input type="text" id="new-review-name" placeholder="Customer Name (e.g. Ama)"
+                                style="width:100%; margin-bottom:5px; padding:8px;">
+                            <textarea id="new-review-text" placeholder="Review Text..."
+                                style="width:100%; margin-bottom:5px; padding:8px;"></textarea>
+                            <select id="new-review-stars" style="width:100%; margin-bottom:10px; padding:8px;">
+                                <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+                                <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+                                <option value="3">⭐⭐⭐ (3 Stars)</option>
+                            </select>
+                            <button id="btn-add-review" class="btn-primary" style="background:#f39c12;">Add Review
+                                ➕</button>
+                        </div>
+                        <div id="admin-reviews-list" class="admin-list">
+                            <!-- List of reviews with delete buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Tab 5: Manage Special Offer -->
+                    <div id="promo-tab" class="admin-tab-content" style="display:none;">
+                        <form id="promo-form">
+                            <div class="form-group"
+                                style="display:flex; align-items:center; gap:10px; margin-bottom:15px; padding:10px; background:#fff0f0; border-radius:10px;">
+                                <input type="checkbox" id="promo-active" style="width:20px; height:20px;">
+                                <label for="promo-active" style="font-weight:bold; cursor:pointer;">Activate Floating
+                                    Offer
+                                    Badge</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Line 1 (Top)</label>
+                                <input type="text" id="promo-l1" placeholder="e.g. BUY 1">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Line 2 (Middle - Large)</label>
+                                <input type="text" id="promo-l2" placeholder="e.g. GET 1">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Line 3 (Bottom)</label>
+                                <input type="text" id="promo-l3" placeholder="e.g. FREE!">
+                            </div>
+
+                            <button type="submit" class="btn-primary"
+                                style="width:100%; margin-top:20px; background:#ff6b6b; border-color:#ff6b6b;">
+                                Update Offer Badge <i class="fas fa-gift"></i>
+                            </button>
+                        </form>
+
+                        <hr style="margin:20px 0; border:0; border-top:1px dashed #ccc;">
+
+                        <!-- Hot Deals Banner Settings (Super Admin Only) -->
+                        <div id="hot-deals-admin-section" style="display:none;">
+                            <h4 style="margin-bottom:15px; color:#e17055;"><i class="fas fa-bullhorn"></i> Top
+                                Notification Bar
+                                (Site Header)
+                            </h4>
+                            <form id="hot-deals-form">
+                                <div class="form-group"
+                                    style="display:flex; align-items:center; gap:10px; margin-bottom:15px; padding:10px; background:#fff5eb; border-radius:10px;">
+                                    <input type="checkbox" id="hd-active" style="width:20px; height:20px;">
+                                    <label for="hd-active" style="font-weight:bold; cursor:pointer;">Activate Top
+                                        Banner</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Banner Text</label>
+                                    <input type="text" id="hd-text" placeholder="e.g. 🔥 HOT DEAL: 50% OFF!">
+                                </div>
+                                <div class="form-group">
+                                    <label>Background Color</label>
+                                    <div style="display:flex; gap:10px;">
+                                        <input type="color" id="hd-color" value="#d63031"
+                                            style="height:40px; width:60px; padding:0; border:none;">
+                                        <input type="text" id="hd-color-text" placeholder="#d63031" value="#d63031"
+                                            style="flex:1;">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Text Color</label>
+                                    <select id="hd-text-color"
+                                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+                                        <option value="#ffffff">White</option>
+                                        <option value="#000000">Black</option>
+                                        <option value="#ffff00">Yellow</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary"
+                                    style="width:100%; margin-top:20px; background:#e17055;">
+                                    Update Banner <i class="fas fa-bullhorn"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Tab 6: Payment Settings -->
+                    <div id="payment-tab" class="admin-tab-content" style="display:none;">
+                        <div style="margin-bottom:20px; padding:15px; background:#f0f3ff; border-radius:10px;">
+                            <h4 style="margin-bottom:10px; color:#4834d4;">Bank Transfer Details</h4>
+                            <p style="font-size:0.85rem; margin-bottom:10px;">Enters details for Bank Transfer option.
+                            </p>
+                            <form id="bank-details-form">
+                                <div class="form-group">
+                                    <label>Bank Name</label>
+                                    <input type="text" id="pay-bank-name" placeholder="e.g. Sampath Bank" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Account Details (HTML allowed)</label>
+                                    <textarea id="pay-bank-desc" rows="3" placeholder="Acc No: 123... Branch: ..."
+                                        required></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary" style="margin-top:10px;">Add Bank
+                                    Info</button>
+                            </form>
+                            <ul id="admin-bank-list" class="admin-list" style="margin-top:10px;"></ul>
+                        </div>
+
+                        <div style="margin-bottom:20px; padding:15px; background:#fff3e0; border-radius:10px;">
+                            <h4 style="margin-bottom:10px; color:#e67e22;">Bank Transfer Details (Japan) 🇯🇵</h4>
+                            <p style="font-size:0.85rem; margin-bottom:10px;">Enters details for Japanese customers.</p>
+                            <form id="bank-details-jp-form">
+                                <div class="form-group">
+                                    <label>Bank Name</label>
+                                    <input type="text" id="pay-bank-jp-name" placeholder="e.g. Japan Post Bank"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Account Details</label>
+                                    <textarea id="pay-bank-jp-desc" rows="3"
+                                        placeholder="Symbol: ... Number: ... Name: ..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary"
+                                    style="margin-top:10px; background:#e67e22;">Add
+                                    JP Bank Info</button>
+                            </form>
+                            <ul id="admin-bank-jp-list" class="admin-list" style="margin-top:10px;"></ul>
+                        </div>
+
+                        <div style="padding:15px; background:#fff0f3; border-radius:10px;">
+                            <h4 style="margin-bottom:10px; color:#d63031;">Online Payment Gateways</h4>
+                            <p style="font-size:0.85rem; margin-bottom:10px;">Add links to online banking portals.</p>
+                            <form id="gateway-form">
+                                <div class="form-group">
+                                    <label>Bank/Gateway Name</label>
+                                    <input type="text" id="pay-gate-name" placeholder="e.g. BOC Online" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>URL Link</label>
+                                    <input type="text" id="pay-gate-url" placeholder="https://..." required>
+                                </div>
+                                <button type="submit" class="btn-primary"
+                                    style="margin-top:10px; background:#d63031;">Add
+                                    Gateway</button>
+                            </form>
+                            <ul id="admin-gateway-list" class="admin-list" style="margin-top:10px;"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Tab 7: About Us Editing -->
+                    <div id="about-tab" class="admin-tab-content" style="display:none;">
+                        <form id="about-us-form">
+                            <div class="form-group">
+                                <label>Description Text</label>
+                                <textarea id="about-us-desc" rows="5" placeholder="Enter About Us description..."
+                                    style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Owner Details (Optional)</label>
+                                <input type="text" id="about-owner-name" placeholder="Owner Name"
+                                    style="margin-bottom:10px;">
+                                <input type="text" id="about-owner-role" placeholder="Role (e.g. Founder)"
+                                    style="margin-bottom:10px;">
+                                <label>Owner Photo (Upload)</label>
+                                <input type="file" id="about-owner-img-file" accept="image/*"
+                                    style="margin-bottom:5px;">
+                                <input type="hidden" id="about-owner-img">
+                            </div>
+                            <button type="submit" class="btn-primary" style="width:100%;">Update About Us <i
+                                    class="fas fa-save"></i></button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 8: Super Admin Security -->
+                    <div id="security-tab" class="admin-tab-content" style="display:none;">
+                        <div style="background:#dfe6e9; padding:20px; border-radius:10px; text-align:center;">
+                            <h3>🔒 Super Admin Actions</h3>
+
+                            <!-- Language Settings -->
+                            <div
+                                style="background:#fff; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #ddd; text-align:left;">
+                                <h4 style="margin-bottom:10px; color:#2d3436;"><i class="fas fa-language"></i> Language
+                                    Settings</h4>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Enable Japanese (JP) Language</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="toggle-jp-lang" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; padding-top:15px; border-top:1px dashed #eee;">
+                                    <span>Enable Voice Greeting (Greeting on click)</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="toggle-voice-greeting" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <p style="font-size:0.75rem; color:#636e72; margin-top:5px;">If disabled, the JP button
+                                    and Japan bank details will be hidden.</p>
+                            </div>
+
+                            <!-- Premium Feature Toggles -->
+                            <div
+                                style="background:#fff; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #ddd; text-align:left;">
+                                <h4 style="margin-bottom:15px; color:#2d3436;"><i class="fas fa-magic"></i> Global
+                                    Feature Controls</h4>
+
+                                <div class="admin-toggle-row"
+                                    style="background:#e3f2fd; border:2px solid #2196f3; padding:10px; border-radius:5px; margin-bottom:10px;">
+                                    <span style="color:#1976d2; font-weight:bold;">🌍 PUBLISH WEBSITE</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-site-published"
+                                            checked><span class="slider round"></span></label>
+                                </div>
+                                <p style="font-size:0.75rem; color:#1976d2; margin-bottom:15px;">Turn OFF to show "Under
+                                    Maintenance" to visitors. Only Super Admin can access.</p>
+
+                                <div class="admin-toggle-row">
+                                    <span>Dark Mode Button</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-dark-mode-feature"
+                                            checked><span class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>Custom Candy Cursor</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-custom-cursor" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>Newsletter Section</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-newsletter" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>FAQ Section</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-faq" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>Customer Reviews Slider</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-reviews" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>Floating Social Bar</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-social-bar" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>Exit Intent Popup</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-exit-popup" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <div class="admin-toggle-row">
+                                    <span>Sales Alert Notifications</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-sales-alerts" checked><span
+                                            class="slider round"></span></label>
+                                </div>
+                            </div>
+
+                            <!-- Seasonal Magic Toggles -->
+                            <div
+                                style="background:#fff; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #ddd; text-align:left;">
+                                <h4 style="margin-bottom:15px; color:#c0392b;"><i class="fas fa-holly-berry"></i>
+                                    Seasonal Magic (Festivals)</h4>
+                                <div class="admin-toggle-row"
+                                    style="flex-direction:column; align-items:flex-start; gap:10px;">
+                                    <span>Active Festival Theme:</span>
+                                    <select id="seasonal-theme-select"
+                                        style="width:100%; padding:10px; border-radius:10px; border:2px solid #eee;">
+                                        <option value="none">Default (Sweet Pink)</option>
+                                        <option value="avurudu">🌞 Avurudu (Sinhala & Tamil New Year)</option>
+                                        <option value="vesak">🏮 Vesak Festival (Lantern Mode)</option>
+                                        <option value="christmas">❄️ Christmas Season (Snowy Mode)</option>
+                                    </select>
+                                </div>
+                                </p>
+                            </div>
+
+                            <!-- EMERGENCY PROTOCOLS -->
+                            <div
+                                style="background:#fff0f0; padding:15px; border-radius:10px; margin-bottom:20px; border:2px solid #e17055; text-align:left;">
+                                <h4 style="margin-bottom:15px; color:#c0392b;"><i class="fas fa-shield-alt"></i> Panic
+                                    Protocols</h4>
+
+                                <div class="admin-toggle-row">
+                                    <span style="color:#d63031; font-weight:bold;">🚨 LOCKDOWN MODE (Freeze
+                                        Staff)</span>
+                                    <label class="switch"><input type="checkbox" id="toggle-lockdown-mode"><span
+                                            class="slider round"></span></label>
+                                </div>
+                                <p style="font-size:0.75rem; color:#c0392b; margin-top:5px;">Enable this to INSTANTLY
+                                    block all Normal Admins/Staff from making any changes.</p>
+
+                                <hr style="border:0; border-top:1px dashed #e17055; margin:15px 0;">
+
+                                <h5 style="color:#2d3436; margin-bottom:10px;">Verify Staff Access:</h5>
+                                <div id="staff-list-container">
+                                    <p style="text-align:center; color:#666;">Loading staff list...</p>
+                                </div>
+                            </div>
+
+                            <style>
+                                .admin-toggle-row {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    padding: 10px 0;
+                                    border-bottom: 1px dashed #eee;
+                                    font-size: 0.9rem;
+                                }
+
+                                .admin-toggle-row:last-child {
+                                    border-bottom: none;
+                                }
+                            </style>
+
+                            <p style="margin-bottom:20px;">Update the password for <b>Normal Admin</b> access.</p>
+
+                            <div class="form-group" style="text-align:left;">
+                                <label>Super Admin Password (to authorize)</label>
+                                <input type="password" id="current-admin-pass" placeholder="Enter Super Admin Password">
+                            </div>
+                            <div class="form-group" style="text-align:left; margin-top:15px;">
+                                <label>New Normal Admin Password</label>
+                                <input type="password" id="new-admin-access-pass"
+                                    placeholder="Enter new Normal Admin password">
+                            </div>
+                            <button id="update-admin-pass-btn" class="btn-primary"
+                                style="background:#2d3436; width:100%; margin-top:20px;">Update Normal Admin Password &
+                                Sync
+                                🔐</button>
+                            <div
+                                style="background:#dfe6e9; padding:20px; border-radius:10px; text-align:center; margin-top:20px;">
+                                <h3>🖥️ Normal Admin Login Activity</h3>
+                                <p style="margin-bottom:15px; font-size:0.85rem; color:#636e72;">Recent login attempts
+                                    and
+                                    devices.</p>
+                                <div id="login-activity-list"
+                                    style="text-align:left; background:#fff; border-radius:8px; padding:10px; max-height:250px; overflow-y:auto; border:1px solid #ddd;">
+                                    <p style="text-align:center; color:#999; padding:10px;">Loading activity... ⏳</p>
+                                </div>
+                                <button id="refresh-activity-btn" class="btn-primary"
+                                    style="background:#0984e3; width:100%; margin-top:15px; font-size:0.9rem;">Refresh
+                                    Logs
+                                    🔄</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom:20px; text-align:center; mt-4"><i class="fas fa-chart-line"></i> Shop
+                        Statistics</h3>
+                    <div class="stats-grid" id="admin-stats-grid" style="margin-bottom:20px;">
+                        <!-- JS will fill this -->
+                    </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="product-modal">
+        <div class="product-modal-content">
+            <button id="close-product-modal" class="close-modal">&times;</button>
+            <div class="product-modal-body">
+                <div class="product-modal-img-side">
+                    <img id="modal-product-img" src="" alt="Product">
+                    <div id="modal-product-icon" class="modal-icon-fallback"><i class="fas"></i></div>
+                </div>
+                <div class="product-modal-info-side">
+                    <h2 id="modal-product-name">Product Name</h2>
+                    <span id="modal-product-price" class="modal-price">Rs. 0</span>
+                    <p id="modal-product-desc">Full product description goes here...</p>
+
+                    <div class="modal-actions">
+                        <div class="quantity-control">
+                            <button class="qty-btn minus">-</button>
+                            <input type="number" id="modal-qty" value="1" min="1">
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                        <button id="modal-add-to-cart" class="btn-primary">Add to Cart <i
+                                class="fas fa-cart-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="free-delivery-badge"><i class="fas fa-truck-fast"></i> Free Delivery!</div>
+            <h1>Welcome to <span class="highlight playful-text">
+                    <span style="--i:1">H</span><span style="--i:2">a</span><span style="--i:3">p</span><span
+                        style="--i:4">p</span><span style="--i:5">y</span>
+                    <span class="space">&nbsp;</span>
+                    <span style="--i:6">C</span><span style="--i:7">a</span><span style="--i:8">n</span><span
+                        style="--i:9">d</span><span style="--i:10">y</span><span style="--i:11">!</span>
+                </span> 🍭</h1>
+            <p data-i18n="hero_desc">Bringing smiles to every little face with the sweetest, most colorful candies in
+                the world!</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="btn-primary pulse" data-i18n="hero_order">Order Now</a>
+                <a href="#about" class="btn-secondary" data-i18n="hero_owner">Meet the Owner</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <!-- Representing a joyful kid or candy explosion -->
+            <div class="floating-sweets">
+                <i class="fas fa-lollipop huge-icon"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Big Selling Section -->
+    <section id="big-selling" class="big-selling-banner">
+        <div class="banner-container">
+            <div class="banner-badge">HOT DEALS</div>
+            <h2 class="banner-title" data-i18n="big_selling_title">BIG SELLING! 🍭</h2>
+
+            <!-- Dynamic Big Sale Product Area -->
+            <div id="big-sale-product-container" style="display:none; margin-bottom:30px;">
+                <!-- Product Card Injected via JS -->
+            </div>
+
+            <div class="banner-grid">
+                <div class="deal-item">
+                    <div class="deal-icon"><i class="fas fa-gift"></i></div>
+                    <div class="deal-info">
+                        <h4 data-i18n="deal_1">Combo Packs</h4>
+                        <p data-i18n="deal_1_desc">Up to 30% OFF!</p>
+                    </div>
+                </div>
+                <div class="deal-item">
+                    <div class="deal-icon"><i class="fas fa-truck"></i></div>
+                    <div class="deal-info">
+                        <h4 data-i18n="deal_2">Fast Delivery</h4>
+                        <p data-i18n="deal_2_desc">Free on all orders</p>
+                    </div>
+                </div>
+                <div class="deal-item">
+                    <div class="deal-icon"><i class="fas fa-star"></i></div>
+                    <div class="deal-info">
+                        <h4 data-i18n="deal_3">Best Quality</h4>
+                        <p data-i18n="deal_3_desc">International Standards</p>
+                    </div>
+                </div>
+            </div>
+            <a href="#gallery" class="banner-cta" data-i18n="view_deals">View All Deals</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Crafting Smiles & Sweet Memories</h2>
+            <div class="about-content">
+                <div class="owner-card">
+                    <div class="owner-grid">
+                        <div class="owner-image-side">
+                            <div class="owner-img-container">
+                                <img src="owner.jpg"
+                                    onerror="this.src='https://ui-avatars.com/api/?name=Happy+Owner&background=ff69b4&color=fff&size=200'"
+                                    alt="Owner Photo" id="owner-photo" class="owner-photo">
+                                <div class="badge-overlay">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Made with Love</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="owner-text-side">
+                            <span class="sub-title" data-i18n="about_subtitle">From Our Heart to Yours</span>
+                            <h3 data-i18n="about_magic">The Magic Behind the Candy</h3>
+                            <p data-i18n="about_p1">Believe it or not, <strong>Happy Candy</strong> started with a
+                                simple dream: to see that
+                                pure, sparkling joy in a child's eyes when they discover something magical. I remember
+                                the wonder of childhood sweets, and I wanted to bring that same magic back to our little
+                                ones today.</p>
+                            <p data-i18n="about_p2">We don't just sell treats; we package moments of happiness. As
+                                parents, we understand
+                                that quality and safety are your first priorities. That's why every single piece of
+                                candy we offer meets the highest international standards, ensuring that every bite is
+                                not only delicious but also safe for the hearts that matter most.</p>
+
+                            <div class="owner-promises">
+                                <div class="promise">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span data-i18n="promise_1">International Quality</span>
+                                </div>
+                                <div class="promise">
+                                    <i class="fas fa-child"></i>
+                                    <span data-i18n="promise_2">Kid-Safe Always</span>
+                                </div>
+                                <div class="promise">
+                                    <i class="fas fa-magic"></i>
+                                    <span data-i18n="promise_3">100% Pure Happiness</span>
+                                </div>
+                            </div>
+
+                            <div class="social-links">
+                                <a href="https://www.facebook.com/profile.php?id=61575239690769" target="_blank"
+                                    class="social-btn facebook"><i class="fab fa-facebook-f"></i> Connect on
+                                    Facebook</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="gallery-header">
+                <h2 class="section-title" data-i18n="gallery_title">Our Yummy Treats</h2>
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <div class="sort-selector">
+                        <select id="product-sort">
+                            <option value="default">Default Sort</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name-az">Name: A-Z</option>
+                        </select>
+                    </div>
+                    <div class="catalogue-filter-toggle" id="catalogue-toggle">
+                        <span data-i18n="catalogue_label">Catalogue</span>
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-grid">
+                <!-- Dynamic Categories Rendered Here -->
+            </div>
+
+            <!-- Area to display selected products -->
+            <div id="product-display" class="product-display">
+                <p class="select-msg" data-i18n="gallery_select">Select a treat above to see our yummy options! 👆</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="special-request" class="special-request">
+        <div class="container">
+            <div class="request-card">
+                <div class="request-content">
+                    <h2 class="section-title" data-i18n="req_title">Can't find your Favorite? 🍭</h2>
+                    <p data-i18n="req_desc">Tell us what sweet treat you are looking for, and we'll try our best to get
+                        it for you!</p>
+                    <form id="specialRequestForm" class="special-form">
+                        <div class="form-group">
+                            <input type="text" id="req-treat-name"
+                                placeholder="Treat Name (e.g. Blue Raspberry Bonbons)" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="req-treat-desc" placeholder="Details or Quantity needed..."
+                                rows="3"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="button" id="btn-req-whatsapp" class="btn-primary"
+                                style="background-color: #25D366;">
+                                <i class="fab fa-whatsapp"></i> Request via WhatsApp
+                            </button>
+                            <button type="button" id="btn-req-email" class="btn-primary">
+                                <i class="fas fa-envelope"></i> Request via Email
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="request-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive FAQ Section -->
+    <section class="faq-section">
+        <div class="containerSmall">
+            <h2 class="section-title">Common Sweet Questions ❓</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">How long does delivery take? <i class="fas fa-plus"></i></div>
+                    <div class="faq-answer">Local orders are usually delivered within 24-48 hours. International orders
+                        may take 7-10 business days depending on your location. 🚚</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Are your candies safe for children? <i class="fas fa-plus"></i></div>
+                    <div class="faq-answer">Absolutely! Every product we sell meets strict international safety
+                        standards. We prioritize quality and safety above all else. 🛡️🍬</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Do you offer gift wrapping? <i class="fas fa-plus"></i></div>
+                    <div class="faq-answer">Yes! You can select the gift wrapping option during checkout to add a
+                        special touch to your sweet surprise. 🎁✨</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews Slider -->
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">What Our Sweet Lovers Say 💬</h2>
+            <div class="reviews-slider" id="reviews-slider-container">
+                <!-- Dynamic Reviews will be injected here -->
+                <p style="text-align:center; color:#666;">Loading sweet reviews... 🍭</p>
+            </div>
+            <div class="slider-dots" id="reviews-dots">
+                <!-- Dynamic dots -->
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title" data-i18n="contact_title">Get in Touch!</h2>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h4>Call Us</h4>
+                            <p><a href="tel:+94768494653">+94 76 849 4653</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email Us</h4>
+                            <p><a href="mailto:dkavinda217@gmail.com">dkavinda217@gmail.com</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-facebook"></i>
+                        <div>
+                            <h4>Facebook</h4>
+                            <p><a href="https://www.facebook.com/profile.php?id=61575239690769" target="_blank">View
+                                    Profile</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="button" id="btn-whatsapp" class="btn-primary"
+                                style="background-color: #25D366; margin-right: 10px;">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </button>
+                            <button type="button" id="btn-email" class="btn-primary">
+                                <i class="fas fa-envelope"></i> Email
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <script>
+                    // Contact Form Email Logic
+                    const btnContactEmail = document.getElementById('btn-email');
+                    if (btnContactEmail) {
+                        btnContactEmail.addEventListener('click', () => {
+                            const name = document.querySelector('#contactForm input[type="text"]').value;
+                            const email = document.querySelector('#contactForm input[type="email"]').value;
+                            const message = document.querySelector('#contactForm textarea').value;
+
+                            if (!name || !email || !message) {
+                                alert("Please fill in all fields!");
+                                return;
+                            }
+
+                            btnContactEmail.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+                            btnContactEmail.disabled = true;
+
+                            const templateParams = {
+                                from_name: name,
+                                from_email: email,
+                                message: message,
+                                to_name: "Happy Candy Admin"
+                            };
+
+                            // Using the same service ID, ensure you have a template for contact form or reuse
+                            emailjs.send('service_5v7j8a8', 'template_pw_reset', templateParams)
+                                // NOTE: Ideally user should create a specific template for contact form. 
+                                // For now reusing, assuming template handles generic 'message' variable.
+                                .then(() => {
+                                    alert("Message sent successfully! 📧");
+                                    document.getElementById('contactForm').reset();
+                                })
+                                .catch((err) => {
+                                    console.error('Email failed:', err);
+                                    alert("Failed to send email. please try WhatsApp.");
+                                })
+                                .finally(() => {
+                                    btnContactEmail.innerHTML = '<i class="fas fa-envelope"></i> Email';
+                                    btnContactEmail.disabled = false;
+                                });
+                        });
+                    }
+                </script>
+                </form>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="containerSmall">
+            <h2 class="section-title">Join the Sweet Club! 🎁</h2>
+            <p style="text-align:center; margin-bottom:20px; color:#666;">Subscribe to get special discounts and new
+                candy alerts!</p>
+            <form id="newsletter-form" style="display:flex; gap:10px; max-width:500px; margin:0 auto;">
+                <input type="email" id="news-email" placeholder="Your Email Address" required
+                    style="flex:1; padding:12px 20px; border-radius:30px; border:2px solid var(--primary-color);">
+                <button type="submit" class="btn-primary" style="padding:10px 25px;">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>Happy Candy 🍭</h3>
+            </div>
+            <div class="footer-contact">
+                <a href="tel:+94768494653"><i class="fas fa-phone"></i> +94 76 849 4653</a>
+                <a href="mailto:dkavinda217@gmail.com"><i class="fas fa-envelope"></i> dkavinda217@gmail.com</a>
+                <a href="https://www.facebook.com/profile.php?id=61575239690769" target="_blank"><i
+                        class="fab fa-facebook"></i> Facebook</a>
+            </div>
+            <div class="footer-bottom">
+                <p data-i18n="footer_copy">&copy; 2026 Happy Candy. Made with ❤️ for Kids.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Overlay & Sidebar -->
+    <div id="cart-overlay" class="cart-overlay"></div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Treats 🛒</h2>
+            <span id="close-cart" class="close-cart">&times;</span>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Items added via JS -->
+            <p class="empty-cart-msg">Your cart is empty! Add some specific sweets. 🍭</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total" style="margin-bottom: 1.5rem;">
+                <div id="coupon-area" style="margin-bottom:15px; display:flex; gap:10px;">
+                    <input type="text" id="coupon-input" placeholder="Coupon Code (e.g. CANDY10)"
+                        style="flex:1; border-radius:10px; border:1px solid #ddd; padding:8px 15px;">
+                    <button id="apply-coupon" class="btn-primary"
+                        style="padding:5px 15px; font-size:0.8rem;">Apply</button>
+                </div>
+                <div id="discount-display"
+                    style="display:none; color:var(--secondary-color); font-size:0.9rem; margin-bottom:5px;">
+                    <span>Discount:</span>
+                    <span id="discount-amount">-Rs. 0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Total Amount:</span>
+                    <span id="cart-total">Rs. 0</span>
+                </div>
+            </div>
+
+            <div class="payment-selection" style="margin-bottom: 1.5rem;">
+                <h4 style="margin-bottom: 0.8rem; font-family: var(--font-heading); font-size: 1.1rem; color: #555;">
+                    Select Payment Method:</h4>
+                <div class="payment-grid">
+                    <div class="pay-method active" data-method="Cash on Delivery">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>COD</span>
+                    </div>
+                    <div class="pay-method" data-method="Bank Transfer">
+                        <i class="fas fa-university"></i>
+                        <span>Bank</span>
+                    </div>
+                    <div class="pay-method" data-method="Online Card Payment">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Card</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Payment Info Area -->
+            <div id="payment-details-area" class="payment-details-area" style="margin-bottom: 1.5rem;">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <button id="checkout-btn" class="checkout-btn">
+                Checkout via WhatsApp <i class="fab fa-whatsapp"></i>
+            </button>
+            <button id="checkout-btn-sms" class="checkout-btn-sms">
+                Checkout via SMS <i class="fas fa-comment-dots"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sales Alert Notification -->
+    <div id="sales-alert" class="sales-alert">
+        <img id="alert-img" src="" alt="Sweets">
+        <div class="alert-info">
+            <span id="alert-text">Someone just bought <b>Candy</b>!</span><br>
+            <small id="alert-time">Just now from Colombo</small>
+        </div>
+    </div>
+
+    <!-- Floating Social Bar -->
+    <div class="floating-social-bar">
+        <a href="https://www.facebook.com/profile.php?id=61575239690769" target="_blank" class="social-icon fb"
+            title="Follow us on Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://wa.me/0768494653" target="_blank" class="social-icon wa" title="Chat on WhatsApp"><i
+                class="fab fa-whatsapp"></i></a>
+        <a href="#" class="social-icon ig" title="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon tk" title="Follow us on TikTok"><i class="fab fa-tiktok"></i></a>
+    </div>
+
+    <!-- Order Invoice Modal -->
+    <div id="invoice-modal" class="invoice-modal">
+        <div class="invoice-content">
+            <div id="invoice-printable">
+                <div class="invoice-header">
+                    <div class="invoice-logo">🍭 Happy Candy</div>
+                    <div class="invoice-title">ORDER SUMMARY</div>
+                </div>
+                <div class="invoice-info">
+                    <p><b>Date:</b> <span id="inv-date"></span></p>
+                    <p><b>Customer:</b> <span id="inv-customer">Guest</span></p>
+                </div>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-items">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+                <div class="invoice-total">
+                    <p>Subtotal: <span id="inv-subtotal">Rs. 0</span></p>
+                    <p>Discount: <span id="inv-discount">Rs. 0</span></p>
+                    <p class="final-total">Total: <span id="inv-grandtotal">Rs. 0</span></p>
+                </div>
+                <div class="invoice-footer">
+                    Thank you for choosing Happy Candy! ✨
+                </div>
+            </div>
+            <div class="invoice-actions">
+                <button id="close-invoice" class="btn-secondary">Close</button>
+                <button id="confirm-whatsapp" class="btn-primary">Confirm & Send WhatsApp <i
+                        class="fab fa-whatsapp"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Smart Exit-Intent Popup -->
+    <div id="exit-popup" class="exit-popup-overlay">
+        <div class="exit-popup-content">
+            <button class="close-exit-popup">&times;</button>
+            <div class="exit-icon">🎁</div>
+            <h2>Don't Leave Yet! 🍬</h2>
+            <p>Wait! Use code <b>SWEET5</b> for a 5% discount on your first order!</p>
+            <button class="btn-primary" id="copy-exit-coupon">Copy Code & Shop Now</button>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Bar -->
+    <div class="mobile-bottom-bar">
+        <div class="nav-item" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('wishlist-toggle').click()">
+            <i class="fas fa-heart"></i>
+            <span>Wishlist</span>
+        </div>
+        <div class="nav-item cart-main-btn" onclick="document.getElementById('cart-toggle').click()">
+            <div class="cart-icon-wrapper">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="mobile-cart-count">0</span>
+            </div>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('catalogue-toggle').click()">
+            <i class="fas fa-th-large"></i>
+            <span>Shop</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('auth-nav-btn').click()">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </div>
+
+    <!-- Sales Notification Popup -->
+    <div id="sales-alert" class="sales-alert">
+        <div class="sales-alert-img">
+            <img src="" alt="Product">
+        </div>
+        <div class="sales-alert-info">
+            <p><strong>Someone</strong> purchased a verify...</p>
+            <small>Just now</small>
+        </div>
+        <button class="close-sales-alert" onclick="this.parentElement.classList.remove('active')">&times;</button>
+    </div>
+</body>
+
+</html>
